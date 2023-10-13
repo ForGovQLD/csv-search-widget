@@ -86,18 +86,26 @@
 
             // Create a unique id for the search widget that gives context.
             var uniqueId = searchTool.helpers.uniqueId('search-form')
+
             // Build base search widget.
-            container.append(searchTool.build.widget(uniqueId))
+            if (!config.hideSearchWidget) {
+              container.append(searchTool.build.widget(uniqueId))
+            }
+
             // Create filter fields.
             $.each(config.filterFields, function (name, settings) { searchTool.build.filters(data, name, settings) })
+
             // Sort data by specified field/s.
             if (config.sortFields) {
               data.sort(searchTool.helpers.dynamicSort(config.sortFields))
             }
+
             // Add actions to search form buttons.
             searchTool.actions(data, uniqueId)
+
             // Add results container.
             container.append(searchTool.build.results())
+
             // Add pager and page summary.
             searchTool.build.pager().insertAfter('.results')
             searchTool.build.pageSummary().insertBefore('.results')
@@ -867,6 +875,7 @@
     keywords: true,
     submitLabel: 'Search', // Text for submit button.
     resetLabel: 'Clear', // Text for reset button.
+    hideSearchWidget: false, // Option to not display search filters.
     pagination: { // Configuration options for paginate.js.
       pageSize: 10,
     },
