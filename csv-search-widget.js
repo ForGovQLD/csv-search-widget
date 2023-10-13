@@ -680,7 +680,8 @@
               $('.pagination li').addClass('page-item')
               $('.pagination li a').addClass('page-link')
               $('.pager, .page-summary').show()
-              if (pagination.totalNumber <= pagination.pageSize) {
+              if (config.pagination.hidePagination ||
+                  pagination.totalNumber <= pagination.pageSize) {
                 $('.pager').hide()
               }
               if (pagination.totalNumber === 0) {
@@ -878,6 +879,7 @@
     hideSearchWidget: false, // Option to not display search filters.
     pagination: { // Configuration options for paginate.js.
       pageSize: 10,
+      hidePagination: false // When true pagination will not be displayed.
     },
     resultTemplate: {
       data: function (results) {
