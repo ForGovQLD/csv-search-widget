@@ -684,7 +684,8 @@
                   pagination.totalNumber <= pagination.pageSize) {
                 $('.pager').hide()
               }
-              if (pagination.totalNumber === 0) {
+              if (config.pagination.hidePageSummary ||
+                  pagination.totalNumber === 0) {
                 $('.page-summary').hide()
               }
 
@@ -877,9 +878,10 @@
     submitLabel: 'Search', // Text for submit button.
     resetLabel: 'Clear', // Text for reset button.
     hideSearchWidget: false, // Option to not display search filters.
-    pagination: { // Configuration options for paginate.js.
+    pagination: { // Configuration options for pagination.js.
       pageSize: 10,
-      hidePagination: false // When true pagination will not be displayed.
+      hidePagination: false, // When true pagination will not be displayed.
+      hidePageSummary: false // When true, page summary will not be displayed.
     },
     resultTemplate: {
       data: function (results) {
