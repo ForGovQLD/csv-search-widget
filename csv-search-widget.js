@@ -14,7 +14,7 @@
           loaded: false
         },
         select2: {
-          script: './?a=60482',
+          script: 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js', //'./?a=60482',
           loaded: false
         }
       },
@@ -126,7 +126,7 @@
                     $('<link>', {
                       rel: 'stylesheet',
                       type: 'text/css',
-                      href: './?a=60483'
+                      href: 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css' //'./?a=60483'
                     }).appendTo('head')
 
                     // Apply select2 to multi-select inputs.
