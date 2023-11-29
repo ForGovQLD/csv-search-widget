@@ -90,10 +90,10 @@
             // Build base search widget.
             if (!config.hideSearchWidget) {
               container.append(searchTool.build.widget(uniqueId))
-            }
 
             // Create filter fields.
             $.each(config.filterFields, function (name, settings) { searchTool.build.filters(data, name, settings) })
+            }
 
             // Sort data by specified field/s.
             if (config.sortFields) {
@@ -113,6 +113,60 @@
             if (config.placeholderTemplate) {
               // Show placeholder card on initial load.
               searchTool.template.resultPlaceholder()
+            }
+            else if (config.prefilter) {
+              // TODO: can this leverage existing filter logic?
+              if (config.hideSearchWidget) {
+                let filteredItems = []
+                $.each(config.prefilter, (key, values) => {
+                  $.each(data, (i, item) => {
+                    let match = true
+
+                    if (!Array.isArray(values)) {
+                      values = [values]
+                    }
+                    $.each(values, (i, value) => {
+                      if (Array.isArray(item[key])) {
+                        if (!item[key].includes(value)) {
+                          match = false
+                        }
+                      }
+                      else if (value !== item[key]) {
+                        match = false
+                      }
+                    })
+
+                    if (match) {
+                      filteredItems.push(item)
+                    }
+                  })
+                })
+
+                searchTool.template.printResults(filteredItems)
+              }
+              else {
+                $.each(config.prefilter, (key, values) => {
+                  // TODO: test if this works for multi-select/multi-values
+                  console.log('values', values)
+                  if (Array.isArray(values)) {
+                    if (searchTool.flatFilterFields[key].multi) {
+                      $.each(values, (i, value) => {
+                        console.log(i, value)
+                        $(`#${key}-filter option[value=${value}]`, searchTool.container).prop('selected', true)
+                      })
+                      $(`#${key}-filter option[value=${values}]`, searchTool.container).prop('selected', true)
+                    }
+                    else {
+                      $(`#${key}-filter option[value=${values[0]}]`, searchTool.container).prop('selected', true)
+                    }
+                  }
+                  else {
+                    $(`#${key}-filter option[value=${values}]`, searchTool.container).prop('selected', true)
+                  }
+                })
+
+                $('form', searchTool.container).submit()
+              }
             }
             else {
               // Render all results on initial load.
@@ -878,6 +932,7 @@
     submitLabel: 'Search', // Text for submit button.
     resetLabel: 'Clear', // Text for reset button.
     hideSearchWidget: false, // Option to not display search filters.
+    prefilter: false, // Option to prefilter displayed results. Configure as object e.g. { <filter-name>: <value> }
     pagination: { // Configuration options for pagination.js.
       pageSize: 10,
       hidePagination: false, // When true pagination will not be displayed.
