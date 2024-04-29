@@ -402,11 +402,11 @@
                 // Filter out items that don't match the value of the changed input, then map the relevant field options.
                 options = data.filter(function (item) { return item[changed.attr('name')] === changed.val() })
                   .map(function (item) { return item[name].trim() })
-                  .filter(function (item, index, array) { return item != null && array.indexOf(item) === index })
+                  .filter(function (item, index, array) { return !!item && array.indexOf(item) === index })
               }
               else {
                 options = data.map(function (item) { return item[name].trim() })
-                  .filter(function (item, index, array) { return item != null && array.indexOf(item) === index })
+                  .filter(function (item, index, array) { return !!item && array.indexOf(item) === index })
               }
             }
 
@@ -698,7 +698,7 @@
                 // console.log(value.value, item[value.name])
                 if (Array.isArray(item[value.name])) {
                   // console.log('is array')
-                  if (!item[value.name].includes(value.value)) {
+                  if (!item[value.name].map(entry => entry.toUpperCase()).includes(value.value.toUpperCase())) {
                     match = false
                   }
                 }
