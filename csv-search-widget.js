@@ -76,6 +76,9 @@
               $.merge(data, dataObject)
             }
 
+            // Run additional function from configuration to prepare or select data.
+            data = config.dataCallback(data)
+
             // Standardise data keys to camel case.
             data = searchTool.helpers.standardiseKeys(data)
             // Add flattened version of filter fields to searchTool.
@@ -983,6 +986,7 @@
     sortFields: [], // Array of labels of the fields to sort results by. Put a '-' before the label for reverse ordering.
     filterCallback: function () { }, // Additional data filtering before printing results.
     callback: function (data, searchTool) { }, // Additional processing at the end of build.
-    resultsCallback: function (results) { } // Additional processing after results are rendered. Useful for attaching events to elements in result markup.
+    resultsCallback: function (results) { }, // Additional processing after results are rendered. Useful for attaching events to elements in result markup.
+    dataCallback: function (data) { return data } // Run additional function from configuration to prepare or select data.
   }
 })(jQuery)
