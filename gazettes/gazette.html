@@ -1,0 +1,78 @@
+---
+layout: layout.njk
+---
+<div class="container">
+  <div id="gazette-search-tool"></div>
+</div>
+
+<script>
+  (function ($) {
+    let options = {
+      dataSources: [
+        {
+          url: 'https://www.publications.qld.gov.au/api/3/action/package_search?fq=tags:Gazettes&rows=1000',
+          results: 'result.results'
+        },
+      ],
+      submitLabel: 'Bingo!',
+      resultTemplate: {
+        data: function (results) {
+          return results.map(function (entry) {
+            return {
+              name: entry.name,
+              // organization: entry.organization,
+              // description: entry.resources[0].description,
+              url: entry.url,
+              // editions: entry.resources,
+              // tags: entry.tags,
+              dataset: entry.dataset
+            }
+          });
+        },
+        markup: function (result) {
+          return `
+        <div class="card qg-card qg-card__light-theme qg-card__clickable col-12 mb-4">
+          <div class="content">
+            <div class="details">
+              <a href="${result.url}" class="stretched-link">
+                </a>
+                <h3 class="card-title">${result.name}</h3>
+                <div class="card-text">
+                  <p>Dataset: ${result.dataset}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        `;
+        }
+      },
+      // placeholderTemplate: function () {
+      //   return `<p>Put together a README</p>`
+      // }, // Define the template for placeholder result. Using this means actual results will not display until a search is submitted.
+      keywordFields: [ // This is what is used to allow Searching
+        "title",
+        "description",
+        "name"
+      ],
+      filterFields: {
+      },
+      dataCallback: function (data) {
+        let editions = []
+
+        data.forEach((dataset) => {
+          dataset.resources.forEach((resource) => {
+            resource.dataset = dataset.title
+            editions.push(resource)
+          })
+        })
+
+        return editions
+      }
+    }
+
+    // Create the search tool inside the target element.
+    let searchTool = $('#gazette-search-tool').searchTool(options)
+
+  })(jQuery);
+</script>

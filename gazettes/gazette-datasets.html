@@ -1,0 +1,77 @@
+---
+layout: layout.njk
+---
+<div class="container">
+  <div id="gazette-search-tool"></div>
+</div>
+
+<script>
+  (function ($) {
+    let options = {
+      dataSources: [
+        {
+          url: 'https://www.publications.qld.gov.au/api/3/action/package_search?fq=tags:Gazettes&rows=1000',
+          results: 'result.results'
+        },
+      ],
+    submitLabel: 'Bingo!',
+      resultTemplate: {
+        data: function (results) {
+          return results.map(function (entry) {
+            return {
+              name: entry.title,
+              organization: entry.organization,
+              // description: entry.resources[0].description,
+              // url: entry.resources[0].url
+              editions: entry.resources,
+              tags: entry.tags
+            }
+          });
+        },
+        markup: function (result) {
+          let editions_list = result.editions.map(edition => {
+            return `<li><a href="${edition.url}">${edition.name}</a></li>`
+          }
+          )
+          editions_list = editions_list.join('')
+
+          let tags_list = result.tags.map(tag => {
+            return `${tag.display_name}`
+          }
+          )
+          tags_list = tags_list.join(', ')
+
+          return `
+        <div class="card qg-card qg-card__light-theme col-12 mb-4">
+          <div class="content">
+            <div class="details">
+              <h3 class="card-title">${result.name}</h3>
+                <div class="card-text">
+                  <ul>${editions_list}</ul>
+                  <p>Tags: ${tags_list}</p>
+                  <p>Organization: ${result.organization.title}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        `;
+        }
+      },
+      // placeholderTemplate: function () {
+      //   return `<p>Put together a README</p>`
+      // }, // Define the template for placeholder result. Using this means actual results will not display until a search is submitted.
+      keywordFields: [ // This is what is used to allow Searching
+        "title",
+        "description",
+        "name"
+      ],
+      filterFields: {
+      }
+    }
+
+    // Create the search tool inside the target element.
+    let searchTool = $('#gazette-search-tool').searchTool(options);
+
+  })(jQuery);
+</script>
