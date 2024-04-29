@@ -1,6 +1,7 @@
 module.exports = function (eleventyConfig) {
   // eleventyConfig.addPassthroughCopy("layout.css")
-  eleventyConfig.addPassthroughCopy("csv-search-widget.css")
+  eleventyConfig.addPassthroughCopy("css/csv-search-widget.css")
+  eleventyConfig.addPassthroughCopy("css/layout.css")
   eleventyConfig.addPassthroughCopy("csv-search-widget.js")
   eleventyConfig.addPassthroughCopy({"20230814V1-Emergency-reform-faqmyths-data.csv": "emergency-reform-faqs.csv"})
   eleventyConfig.addPassthroughCopy("./node_modules/bootstrap/dist/css/bootstrap.min.css")
@@ -11,8 +12,9 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.setServerOptions({
     port: 5050,
     watch: [
-      "_site/*.css",
-      "_site/*.js"
+      "_site/**/*.css",
+      "_site/**/*.js",
+      "_site/**/*.csv"
     ]
   })
 }
