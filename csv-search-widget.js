@@ -127,7 +127,8 @@
                           match = false
                         }
                       }
-                      else if (value !== item[key]) {
+                      // else if (value !== item[key]) {
+                      else if (!new RegExp(value,'i').test(item[key])) {
                         match = false
                       }
                     })
@@ -138,7 +139,7 @@
                   })
                 })
 
-                searchTool.template.printResults(filteredItems)
+                searchTool.template.printResults(filteredItems.slice(0,config.pagination.pageSize))
               }
               else {
                 $.each(config.prefilter, (key, values) => {
