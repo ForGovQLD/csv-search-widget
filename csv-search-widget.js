@@ -110,11 +110,7 @@
             searchTool.build.pager().insertAfter('.results')
             searchTool.build.pageSummary().insertBefore('.results')
 
-            if (config.placeholderTemplate) {
-              // Show placeholder card on initial load.
-              searchTool.template.resultPlaceholder()
-            }
-            else if (config.prefilter) {
+            if (config.prefilter) {
               // TODO: can this leverage existing filter logic?
               if (config.hideSearchWidget) {
                 let filteredItems = []
@@ -167,6 +163,10 @@
 
                 $('form', searchTool.container).submit()
               }
+            }
+            else if (config.placeholderTemplate) {
+              // Show placeholder card on initial load.
+              searchTool.template.resultPlaceholder()
             }
             else {
               // Render all results on initial load.
