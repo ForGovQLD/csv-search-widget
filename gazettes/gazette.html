@@ -7,6 +7,7 @@ layout: layout.njk
 
 <script>
   (function ($) {
+    
     let options = {
       dataSources: [
         {
@@ -55,7 +56,9 @@ layout: layout.njk
         "description",
         "name"
       ],
+      keywords: true,
       filterFields: {
+        //configure dropdown here
       },
       dataCallback: function (data) {
         let editions = []
