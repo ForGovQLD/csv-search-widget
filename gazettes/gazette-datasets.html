@@ -7,6 +7,12 @@ layout: layout.njk
 
 <script>
   (function ($) {
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'] //global variable
+    const typeOfGazette = {
+        "Gazette": "Gazettes",
+        "Extraordinary": "Extraordinary gazettes",
+        "Index": "Index listings"
+    }
     let options = {
       dataSources: [
         {
@@ -14,23 +20,113 @@ layout: layout.njk
           results: 'result.results'
         },
       ],
-    submitLabel: 'Bingo!',
+      dataCallback: (data) => {
+        data.forEach(set => {
+          let dateRegex = /(\w+) (\d{4})$/
+          let displayDateRegex = /(\d+) (\w+) (\d{4})/
+          let volRegex = /(Volumes?|Vol\. No\.) (\d+)/i
+          let numRegex = /gazettes?( No\.)? (\d+[-–]?\d+)/i
+          let pageRegex = /\(pages? (\d+[-–]?\d+)/
+          let companionGuideRegex = /Companion Guide/
+
+          set.month = ""
+          set.extrao = ""
+          let regexMonth = set.title.match(dateRegex)[1]
+          let regexYear = set.title.match(dateRegex)[2]
+
+          set.resources.forEach(resource => {
+            let regexCompanionGuide = companionGuideRegex.test(resource.description)
+            if (regexCompanionGuide) {
+              resource.companionGuide = true
+            } else {
+              resource.companionGuide = false
+            }
+
+            // Page property
+            let regexPage = resource.description.match(pageRegex)
+            if (regexPage && regexPage.length > 1) {
+              resource.page = regexPage[1]
+            }
+            else {
+              resource.page = null
+            }
+
+            // No. property
+            let regexNum = resource.description.match(numRegex)
+            if (regexNum && regexNum.length > 1) {
+              resource.number = regexNum[2]
+            }
+            else {
+              resource.number = null
+            }
+
+            // Volume property
+            let regexVol = resource.description.match(volRegex)
+            if (regexVol && regexVol.length > 1) {
+              resource.volume = regexVol[2]
+            }
+            else {
+              resource.volume = null
+            }
+
+            // Date property
+            let regexDate = resource.description.match(displayDateRegex)
+            if (regexDate && regexDate.length > 1) {
+              resource.date = regexDate[0]
+            }
+            else {
+              resource.date = null
+            }
+          })
+
+          set.volumes = set.resources
+            .map(resource => resource.volume)
+            .filter((volume, i, array) => !!volume && i == array.indexOf(volume))
+            .join()
+
+          let tagArray = ["Extraordinary", "Index"]
+          for (const tag in set.tags) {
+            set.gazetteType = `Gazette`
+            let tagName = set.tags[tag].name
+
+            if (tagArray.includes(tagName)) {
+              set.gazetteType = tagName
+              break
+            }
+          }
+          if (months.includes(regexMonth)) {
+            set.month = regexMonth
+          }
+          set.year = regexYear
+        });
+        return data
+      },
+      submitLabel: 'Bingo!',
       resultTemplate: {
         data: function (results) {
           return results.map(function (entry) {
             return {
               name: entry.title,
               organization: entry.organization,
-              // description: entry.resources[0].description,
-              // url: entry.resources[0].url
               editions: entry.resources,
-              tags: entry.tags
+              tags: entry.tags,
+              type: entry.gazetteType
             }
           });
         },
         markup: function (result) {
           let editions_list = result.editions.map(edition => {
-            return `<li><a href="${edition.url}">${edition.name}</a></li>`
+            let prelink = edition.date ? edition.date : ""
+            if (result.type === "Index") {
+              if (edition.companionGuide) {
+                return `<li><a href="${edition.url}">${edition.name}</a></li>`
+              }
+              else {
+                prelink = edition.name
+              }
+            }
+            return `<li>${prelink} <a href="${edition.url}">
+            ${edition.volume ? `Volume ${edition.volume}` : ""} ${edition.number ? `Gazette No. ${edition.number}` : ""} ${edition.page ? `Pages ${edition.page}` : ""}</a></li>`
           }
           )
           editions_list = editions_list.join('')
@@ -48,8 +144,6 @@ layout: layout.njk
               <h3 class="card-title">${result.name}</h3>
                 <div class="card-text">
                   <ul>${editions_list}</ul>
-                  <p>Tags: ${tags_list}</p>
-                  <p>Organization: ${result.organization.title}</p>
                 </div>
               </div>
             </div>
@@ -58,20 +152,44 @@ layout: layout.njk
         `;
         }
       },
-      // placeholderTemplate: function () {
-      //   return `<p>Put together a README</p>`
-      // }, // Define the template for placeholder result. Using this means actual results will not display until a search is submitted.
-      keywordFields: [ // This is what is used to allow Searching
+      keywordFields: [
         "title",
         "description",
         "name"
       ],
       filterFields: {
+        year: {
+          type: 'select',
+          sort: 'reverse',
+          multi: true,
+          label: "Year"
+        },
+        month: {
+          options: months,
+          type: 'select',
+          sort: false,
+          multi: true,
+          label: "Month"
+        },
+        gazetteType: {
+          options: typeOfGazette,
+          type: 'select',
+          multi: true,
+          label: "Gazette type",
+          defaultText: "gazette type"
+        },
+        volumes: {
+          type: 'select',
+          multi: false,
+          label: "Volume",
+          defaultText: "volume",
+          data: {
+            type: 'array',
+            separator: ','
+          }
+        }
       }
     }
-
-    // Create the search tool inside the target element.
     let searchTool = $('#gazette-search-tool').searchTool(options);
-
   })(jQuery);
 </script>
