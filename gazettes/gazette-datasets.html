@@ -7,12 +7,15 @@ layout: layout.njk
 
 <script>
   (function ($) {
-    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'] //global variable
+    // Global variables
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     const typeOfGazette = {
         "Gazette": "Gazettes",
         "Extraordinary": "Extraordinary gazettes",
         "Index": "Index listings"
     }
+
+    // Search widget config
     let options = {
       dataSources: [
         {
@@ -29,12 +32,18 @@ layout: layout.njk
           let pageRegex = /\(pages? (\d+[-–]?\d+)/
           let companionGuideRegex = /Companion Guide/
 
-          set.month = ""
-          set.extrao = ""
+          // Month and Year properties
           let regexMonth = set.title.match(dateRegex)[1]
           let regexYear = set.title.match(dateRegex)[2]
 
+          set.month = ""
+          if (months.includes(regexMonth)) {
+            set.month = regexMonth
+          }
+          set.year = regexYear
+
           set.resources.forEach(resource => {
+            // Companion guide boolean property
             let regexCompanionGuide = companionGuideRegex.test(resource.description)
             if (regexCompanionGuide) {
               resource.companionGuide = true
@@ -94,11 +103,8 @@ layout: layout.njk
               break
             }
           }
-          if (months.includes(regexMonth)) {
-            set.month = regexMonth
-          }
-          set.year = regexYear
         });
+
         return data
       },
       resultTemplate: {
