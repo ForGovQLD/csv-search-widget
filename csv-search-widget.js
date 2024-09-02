@@ -419,6 +419,12 @@
             else if (settings.sort === 'reverse') {
               return options.sort().reverse()
             }
+            else if (settings.sort === 'numeric') {
+              return options.sort((a, b) => a - b)
+            }
+            else if (settings.sort === 'numeric-reverse') {
+              return options.sort((a, b) => b - a)
+            }
             else {
               return options.sort()
             }
