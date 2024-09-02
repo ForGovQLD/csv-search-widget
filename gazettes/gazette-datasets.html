@@ -89,8 +89,8 @@ layout: layout.njk
             set.gazetteType = `Gazette`
             let tagName = set.tags[tag].name
 
-            if (tagArray.includes(tagName)) {
-              set.gazetteType = tagName
+            if (tagArray.includes(searchTool.helpers.toTitleCase(tagName))) {
+              set.gazetteType = searchTool.helpers.toTitleCase(tagName)
               break
             }
           }
