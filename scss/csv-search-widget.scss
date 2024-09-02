@@ -1,16 +1,32 @@
 .qg-search-widget {
-  .search-form fieldset label {
-    margin-top: 1rem;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+
+  h2 {
+    font-size: 1.25rem;
+    margin-top: 0;
   }
+
+  .search-form fieldset {
+    margin-bottom: 1.5rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
   span.select2.select2-container.select2-container--default {
     width: 100% !important;
   }
+
   .select2-container .select2-search--inline {
     float: none
   }
+
   .select2-container--default .select2-selection--multiple {
     border: 1px solid #ccc;
   }
+
   .select2-selection--multiple:before {
     color: #495057;
     content: "\f078";
@@ -20,12 +36,13 @@
     right: 6px;
     top: calc(50% - 6px);
   }
+
   .select2-container--open .select2-selection--multiple:before {
     -webkit-transform: rotate(180deg);
     transform: rotate(180deg)
   }
+
   .actions {
-    padding-top: 2rem;
     overflow: visible;
 
     button {
@@ -42,7 +59,15 @@
   }
 }
 
-.card, .qg-card {
+.pagination {
+  .page-link:not([href]):hover {
+    cursor: pointer;
+  }
+}
+
+
+.card,
+.qg-card {
   .content .details .qg-btn.btn-outline-dark {
     color: #00698f !important;
     text-decoration: none !important;
@@ -53,9 +78,12 @@
   }
 }
 
+.accordion,
 .qg-accordion {
   &.qg-accordion-v2 article .collapsing-section .qg-search-widget~.results {
-    .card, .qg-card {
+
+    .card,
+    .qg-card {
       &:last-child {
         margin-bottom: 2rem;
       }
