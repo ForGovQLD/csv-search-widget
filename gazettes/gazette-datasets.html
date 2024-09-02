@@ -24,7 +24,7 @@ layout: layout.njk
         data.forEach(set => {
           let dateRegex = /(\w+) (\d{4})$/
           let displayDateRegex = /(\d+) (\w+) (\d{4})/
-          let volRegex = /(Volumes?|Vol\. No\.) (\d+)/i
+          let volRegex = /(Volumes?.*?|Vol\. No\.) (\d+)/i
           let numRegex = /gazettes?( No\.)? (\d+[-–]?\d+)/i
           let pageRegex = /\(pages? (\d+[-–]?\d+)/
           let companionGuideRegex = /Companion Guide/
