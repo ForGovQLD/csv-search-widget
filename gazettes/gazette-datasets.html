@@ -116,7 +116,7 @@ layout: layout.njk
         },
         markup: function (result) {
           let editions_list = result.editions.map(edition => {
-            let prelink = edition.date ? edition.date : ""
+            let prelink = edition.date ? edition.date : edition.name
             if (result.type === "Index") {
               if (edition.companionGuide) {
                 return `<li><a href="${edition.url}">${edition.name}</a></li>`
