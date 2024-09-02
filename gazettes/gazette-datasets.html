@@ -16,7 +16,7 @@ layout: layout.njk
     let options = {
       dataSources: [
         {
-          url: 'https://www.publications.qld.gov.au/api/3/action/package_search?fq=tags:Gazettes&rows=1000',
+          url: 'https://www.publications.qld.gov.au/api/3/action/package_search?fq=tags:(Gazettes OR gazettes)&rows=1000',
           results: 'result.results'
         },
       ],
