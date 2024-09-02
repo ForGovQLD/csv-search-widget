@@ -101,7 +101,6 @@ layout: layout.njk
         });
         return data
       },
-      submitLabel: 'Bingo!',
       resultTemplate: {
         data: function (results) {
           return results.map(function (entry) {
@@ -152,6 +151,7 @@ layout: layout.njk
         `;
         }
       },
+      keywords: false,
       keywordFields: [
         "title",
         "description",
@@ -180,15 +180,20 @@ layout: layout.njk
         },
         volumes: {
           type: 'select',
-          multi: false,
+          multi: true,
           label: "Volume",
           defaultText: "volume",
           data: {
             type: 'array',
             separator: ','
-          }
+          },
+          sort: 'numeric'
         }
-      }
+      },
+      sortFields: ['-year'],
+      pagination: { // Configuration options for pagination.js.
+        pageSize: 20,
+      },
     }
     let searchTool = $('#gazette-search-tool').searchTool(options);
   })(jQuery);
