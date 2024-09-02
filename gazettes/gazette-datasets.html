@@ -27,8 +27,8 @@ layout: layout.njk
         data.forEach(set => {
           let dateRegex = /(\w+) (\d{4})$/
           let displayDateRegex = /(\d+) (\w+) (\d{4})/
-          let volRegex = /(Volumes?.*?|Vol\. No\.) (\d+)/i
-          let numRegex = /gazettes?( No\.)? (\d+[-–]?\d+)/i
+          let volRegex = /(?:Volumes?.*?|Vol\. No\.) (\d+)/i
+          let numRegex = /gazettes?(?: No\.)? (\d+[-–]?\d+)/i
           let pageRegex = /\(pages? (\d+[-–]?\d+)/
           let companionGuideRegex = /Companion Guide/
 
@@ -63,7 +63,7 @@ layout: layout.njk
             // No. property
             let regexNum = resource.description.match(numRegex)
             if (regexNum && regexNum.length > 1) {
-              resource.number = regexNum[2]
+              resource.number = regexNum[1]
             }
             else {
               resource.number = null
@@ -72,7 +72,7 @@ layout: layout.njk
             // Volume property
             let regexVol = resource.description.match(volRegex)
             if (regexVol && regexVol.length > 1) {
-              resource.volume = regexVol[2]
+              resource.volume = regexVol[1]
             }
             else {
               resource.volume = null
