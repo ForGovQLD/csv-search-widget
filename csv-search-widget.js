@@ -10,7 +10,7 @@
           loaded: false
         },
         pagination: {
-          script: 'https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.min.js',
+          script: 'https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.6.0/pagination.min.js',
           loaded: false
         },
         select2: {
@@ -218,13 +218,14 @@
       build: {
         widget: function (uniqueId) {
           // Create search widget.
-          var widget = $('<div>').addClass(['qg-search-widget', 'border']).attr('id', uniqueId)
-          var title = config.title.length ? $('<h2>').text(config.title) : ''
-          var form = $('<form>').addClass('search-form').attr('novalidate', '')
+          let widget_wrapper = $('<div>').addClass('qg-search-widget-qgds'),
+              widget = $('<div>').addClass(['qg-search-widget', 'border']).attr('id', uniqueId),
+              title = config.title.length ? $('<h2>').text(config.title) : '',
+              form = $('<form>').addClass('search-form').attr('novalidate', '')
 
           if (config.keywords) {
             var kwFieldset = $('<fieldset>').attr('id', 'keywords-input')
-            var kwLabel = $('<label>').attr('for', 'keywords-filter').text('Keywords')
+            var kwLabel = $('<label>').attr('for', 'keywords-filter').text('Keywords').addClass('qld-text-input-label')
             var kwInput = $('<input>').addClass('form-control form-text search-keywords').attr({ id: 'keywords-filter', type: 'text' })
             kwFieldset.append(kwLabel, kwInput)
             form.append(kwFieldset)
@@ -246,12 +247,13 @@
           reset.on('click', function () { form.trigger('reset') })
 
           widget.append(title, form)
-          return widget
+          widget_wrapper.append(widget)
+          return widget_wrapper
         },
         filters: function (data, name, settings, parent, changed) {
           parent = parent || null
           var fieldset = $('<fieldset>').attr('id', name + '-input').addClass('form-item')
-          var label = $('<label>').attr('for', name + '-filter').text(settings.label)
+          var label = $('<label>').attr('for', name + '-filter').text(settings.label).addClass('qld-text-input-label')
           var invalid = ''
           var input
 
@@ -419,6 +421,12 @@
             else if (settings.sort === 'reverse') {
               return options.sort().reverse()
             }
+            else if (settings.sort === 'numeric') {
+              return options.sort((a, b) => a - b)
+            }
+            else if (settings.sort === 'numeric-reverse') {
+              return options.sort((a, b) => b - a)
+            }
             else {
               return options.sort()
             }
@@ -520,7 +528,7 @@
           },
         },
         results: function () {
-          return $('<div>').addClass('results row qg-cards')
+          return $('<div>').addClass('results row row-cols-1 g-4')
         },
         pager: function () {
           return $('<nav>').addClass('pager')
@@ -728,8 +736,10 @@
             pageSize: config.pagination.pageSize,
             autoHidePrevious: true,
             autoHideNext: true,
-            prevText: '&laquo; Previous',
-            nextText: 'Next &raquo; ',
+            prevText: 'Previous',
+            prevClassName: 'previous',
+            nextText: 'Next',
+            nextClassName: 'next',
             ulClassName: 'pagination',
             callback: function (data, pagination) {
               searchTool.template.pageSummary(pagination, data.length)

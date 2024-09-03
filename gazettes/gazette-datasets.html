@@ -7,16 +7,19 @@ layout: layout.njk
 
 <script>
   (function ($) {
-    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'] //global variable
+    // Global variables
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     const typeOfGazette = {
         "Gazette": "Gazettes",
         "Extraordinary": "Extraordinary gazettes",
         "Index": "Index listings"
     }
+
+    // Search widget config
     let options = {
       dataSources: [
         {
-          url: 'https://www.publications.qld.gov.au/api/3/action/package_search?fq=tags:Gazettes&rows=1000',
+          url: 'https://www.publications.qld.gov.au/api/3/action/package_search?fq=tags:(Gazettes OR gazettes)&rows=1000',
           results: 'result.results'
         },
       ],
@@ -24,17 +27,23 @@ layout: layout.njk
         data.forEach(set => {
           let dateRegex = /(\w+) (\d{4})$/
           let displayDateRegex = /(\d+) (\w+) (\d{4})/
-          let volRegex = /(Volumes?|Vol\. No\.) (\d+)/i
-          let numRegex = /gazettes?( No\.)? (\d+[-–]?\d+)/i
+          let volRegex = /(?:Volumes?.*?|Vol\. No\.) (\d+)/i 
+          let numRegex = /gazettes?(?: No\.)? (\d+[-–]?\d+)/i
           let pageRegex = /\(pages? (\d+[-–]?\d+)/
           let companionGuideRegex = /Companion Guide/
 
-          set.month = ""
-          set.extrao = ""
+          // Month and Year properties
           let regexMonth = set.title.match(dateRegex)[1]
           let regexYear = set.title.match(dateRegex)[2]
 
+          set.month = ""
+          if (months.includes(regexMonth)) {
+            set.month = regexMonth
+          }
+          set.year = regexYear
+
           set.resources.forEach(resource => {
+            // Companion guide boolean property
             let regexCompanionGuide = companionGuideRegex.test(resource.description)
             if (regexCompanionGuide) {
               resource.companionGuide = true
@@ -42,42 +51,24 @@ layout: layout.njk
               resource.companionGuide = false
             }
 
-            // Page property
-            let regexPage = resource.description.match(pageRegex)
-            if (regexPage && regexPage.length > 1) {
-              resource.page = regexPage[1]
-            }
-            else {
-              resource.page = null
-            }
-
-            // No. property
-            let regexNum = resource.description.match(numRegex)
-            if (regexNum && regexNum.length > 1) {
-              resource.number = regexNum[2]
-            }
-            else {
-              resource.number = null
+            // Function for page, no. and volume properties
+            const regexProperty = (regexKey, propertyName, matchIndex = 1) => {
+              let matchRegex = resource.description.match(regexKey)
+              if (matchRegex && matchRegex.length > 1) {
+                resource[propertyName] = matchRegex[matchIndex]
+              } 
+              else {
+                resource[propertyName] = null
+              }
             }
 
-            // Volume property
-            let regexVol = resource.description.match(volRegex)
-            if (regexVol && regexVol.length > 1) {
-              resource.volume = regexVol[2]
-            }
-            else {
-              resource.volume = null
-            }
+            regexProperty(pageRegex, "page")
+            regexProperty(numRegex, "number")
+            regexProperty(volRegex, "volume")
+            regexProperty(displayDateRegex, "date", 0)
 
-            // Date property
-            let regexDate = resource.description.match(displayDateRegex)
-            if (regexDate && regexDate.length > 1) {
-              resource.date = regexDate[0]
-            }
-            else {
-              resource.date = null
-            }
-          })
+          }
+          )
 
           set.volumes = set.resources
             .map(resource => resource.volume)
@@ -89,19 +80,15 @@ layout: layout.njk
             set.gazetteType = `Gazette`
             let tagName = set.tags[tag].name
 
-            if (tagArray.includes(tagName)) {
-              set.gazetteType = tagName
+            if (tagArray.includes(searchTool.helpers.toTitleCase(tagName))) {
+              set.gazetteType = searchTool.helpers.toTitleCase(tagName)
               break
             }
           }
-          if (months.includes(regexMonth)) {
-            set.month = regexMonth
-          }
-          set.year = regexYear
         });
+
         return data
       },
-      submitLabel: 'Bingo!',
       resultTemplate: {
         data: function (results) {
           return results.map(function (entry) {
@@ -116,7 +103,7 @@ layout: layout.njk
         },
         markup: function (result) {
           let editions_list = result.editions.map(edition => {
-            let prelink = edition.date ? edition.date : ""
+            let prelink = edition.date ? edition.date : edition.name
             if (result.type === "Index") {
               if (edition.companionGuide) {
                 return `<li><a href="${edition.url}">${edition.name}</a></li>`
@@ -152,6 +139,7 @@ layout: layout.njk
         `;
         }
       },
+      keywords: false,
       keywordFields: [
         "title",
         "description",
@@ -180,15 +168,20 @@ layout: layout.njk
         },
         volumes: {
           type: 'select',
-          multi: false,
+          multi: true,
           label: "Volume",
           defaultText: "volume",
           data: {
             type: 'array',
             separator: ','
-          }
+          },
+          sort: 'numeric'
         }
-      }
+      },
+      sortFields: ['-year'],
+      pagination: { // Configuration options for pagination.js.
+        pageSize: 20,
+      },
     }
     let searchTool = $('#gazette-search-tool').searchTool(options);
   })(jQuery);
