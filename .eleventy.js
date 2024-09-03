@@ -1,4 +1,7 @@
+const eleventyNavigationPlugin = require("@11ty/eleventy-navigation")
 module.exports = function (eleventyConfig) {
+  eleventyConfig.addPlugin(eleventyNavigationPlugin)
+
   // eleventyConfig.addPassthroughCopy("layout.css")
   eleventyConfig.addPassthroughCopy("css/csv-search-widget.css")
   eleventyConfig.addPassthroughCopy("css/layout.css")

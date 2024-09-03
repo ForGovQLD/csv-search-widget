@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "preserve": "rm -rf _site",
     "serve": "npx @11ty/eleventy --serve",
     "scss": "node-sass --watch scss -o css",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -16,6 +17,7 @@
     "node-sass": "^9.0.0"
   },
   "dependencies": {
+    "@11ty/eleventy-navigation": "^0.3.5",
     "bootstrap": "^4.6.2",
     "jquery": "^3.7.0"
   }
