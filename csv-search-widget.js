@@ -318,7 +318,7 @@
                   // Filter out data that doesn't match the parent filter value.
                   const parentEl = $('#' + parent + '-filter')
 
-                  filteredData = data.filter(function (item) { return item.type === parentEl.val() })
+                  filteredData = data.filter(function (item) { return item[parent] === parentEl.val() })
                 }
                 const value = input.val(),
                   flatFields = searchTool.flatFilterFields
