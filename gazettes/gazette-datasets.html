@@ -125,18 +125,17 @@ layout: layout.njk
           tags_list = tags_list.join(', ')
 
           return `
-        <div class="card qg-card qg-card__light-theme col-12 mb-4">
-          <div class="content">
-            <div class="details">
-              <h3 class="card-title">${result.name}</h3>
+          <div class="col">
+            <div class="card card-default default card-multi-action">
+              <div class="card-body">
+                <h3 class="card-title">${result.name}</h3>
                 <div class="card-text">
                   <ul>${editions_list}</ul>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        `;
+          `
         }
       },
       keywords: false,
