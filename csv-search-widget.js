@@ -981,16 +981,20 @@
           items.push('<li>' + key + ': ' + val + '</li>')
         })
 
-        var markup =
-          '<div class="card">' +
-          '<div class="card-body">' +
-          '<p>The results template has not been created.</p>' +
-          '<div class="card-title">Data</div>' +
-          '<ul>' +
-          items.join('') +
-          '</ul>' +
-          '</div>' +
-          '</div>'
+        var markup = `
+        <div class="col">
+          <div class="card">
+            <div class="card-body">
+              <p>The results template has not been created.</p>
+              <div class="card-title">Data</div>
+              <ul>
+                ${items.join('')}
+              </ul>
+            </div>
+          </div>
+        </div>
+        `
+
         return markup
       },
     },
