@@ -650,7 +650,13 @@
               }
 
               var results = filteredItems.filter(function (item) {
-                var searchFields = $.map(config.keywordFields, function (field) {
+                let keywordFields = Object.keys(item)
+
+                if (config.keywordFields) {
+                  keywordFields = config.keywordFields
+                }
+
+                var searchFields = $.map(keywordFields, function (field) {
                   return item[field]
                 }).join(' ')
 
