@@ -4,8 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "preserve": "rm -rf _site",
     "serve": "npx @11ty/eleventy --serve",
     "scss": "node-sass --watch scss -o css",
+    "serve-dev": "run-p scss serve",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -13,10 +15,12 @@
   "license": "ISC",
   "devDependencies": {
     "@11ty/eleventy": "^2.0.1",
-    "node-sass": "^9.0.0"
+    "node-sass": "^9.0.0",
+    "npm-run-all": "^4.1.5"
   },
   "dependencies": {
-    "bootstrap": "^4.6.2",
+    "@11ty/eleventy-navigation": "^0.3.5",
+    "bootstrap": "^5.3.0",
     "jquery": "^3.7.0"
   }
 }
