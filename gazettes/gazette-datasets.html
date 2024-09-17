@@ -138,6 +138,30 @@ layout: layout.njk
           `
         }
       },
+      noResultsTemplate: function () {
+        let gazetteTypeFilter = document.querySelector('#gazetteType-filter'),
+            monthFilter = document.querySelector('#month-filter'),
+            indexMonthWarning = '';
+
+        console.log(`gazetteType: ${gazetteTypeFilter.value}; month: ${monthFilter.value}`)
+
+        if (gazetteTypeFilter.value === 'Index' && !!monthFilter.value) {
+          indexMonthWarning = `<p>The 'Month' filter can't be used with index listings. Remove one of these selections and try again.</p>`
+        }
+        return `
+        <div class="col">
+          <div class="card card-default default card-multi-action">
+            <div class="card-body">
+              <h3 class="card-title">No results found</h3>
+              <div class="card-text">
+                <p>We couldn't find any matching results.</p>
+                ${indexMonthWarning}
+              </div>
+            </div>
+          </div>
+        </div>
+        `
+      },
       keywords: false,
       keywordFields: [
         "title",
@@ -156,7 +180,8 @@ layout: layout.njk
           type: 'select',
           sort: false,
           multi: true,
-          label: "Month"
+          label: "Month",
+          hint: "(Gazettes and extraordinary gazettes only)"
         },
         gazetteType: {
           options: typeOfGazette,
