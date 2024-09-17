@@ -9288,3 +9288,10 @@ textarea.form-control-lg {
   transition: box-shadow .2s; }
   .qg-card.qg-card__clickable:hover, .qg-card.qg-card__clickable:focus, .qg-card.qg-card__clickable:active {
     box-shadow: none; }
+
+.qld-hint-text {
+  color: #636363;
+  display: block;
+  font-size: 1em;
+  line-height: 1.5;
+  margin-bottom: 0.5rem; }
