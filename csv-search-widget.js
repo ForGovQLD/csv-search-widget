@@ -256,6 +256,11 @@
           var label = $('<label>').attr('for', name + '-filter').text(settings.label).addClass('qld-text-input-label')
           var invalid = ''
           var input
+          var hint
+
+          if (settings.hint) {
+            hint = $('<span>').attr('id',`${name}-hint`).addClass('qld-hint-text').text(settings.hint)
+          }
 
           switch (settings.type) {
             case 'check':
@@ -284,7 +289,7 @@
               $('.search-form #' + parent + '-input').append(fieldset.append(label, input))
             }
             else {
-              $('#filters').append(fieldset.append(label, input, invalid))
+              $('#filters').append(fieldset.append(label, hint, input, invalid))
               // fieldset.append(label, input, invalid).insertBefore('.search-form .actions')
             }
 
