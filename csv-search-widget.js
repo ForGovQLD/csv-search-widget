@@ -682,12 +682,8 @@
               searchTool.template.paginate(results)
             }
             else {
-              $('.results').append(
-                '<div id="no-results">' +
-                '<h3>No results found</h3>' +
-                '<p>We couldn\'t find any matching results.</p>' +
-                '</div>')
               $('.page-summary, .pager').hide()
+              $('.results').empty().append(config.noResultsTemplate())
             }
 
             $('#search-form .was-validated').removeClass('was-validated')
@@ -1004,6 +1000,14 @@
       },
     },
     resultPlaceholder: function () { }, // Define the template for placeholder result. Using this means actual results will not display until a search is submitted.
+    noResultsTemplate: function () {
+      return `
+      <div id="no-results">
+        <h3>No results found</h3>
+        <p>We couldn\'t find any matching results.</p>
+      </div>
+      `
+    },
     sortFields: [], // Array of labels of the fields to sort results by. Put a '-' before the label for reverse ordering.
     filterCallback: function () { }, // Additional data filtering before printing results.
     callback: function (data, searchTool) { }, // Additional processing at the end of build.
