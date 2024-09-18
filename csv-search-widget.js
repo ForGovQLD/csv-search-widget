@@ -258,10 +258,6 @@
           var input
           var hint
 
-          if (settings.hint) {
-            hint = $('<span>').attr('id',`${name}-hint`).addClass('qld-hint-text').text(settings.hint)
-          }
-
           switch (settings.type) {
             case 'check':
               if (settings.multi) {
@@ -285,6 +281,12 @@
             else {
               input.attr('no-validate', '')
             }
+
+            if (settings.hint) {
+              hint = $('<span>').attr('id',`${name}-hint`).addClass('qld-hint-text').text(settings.hint)
+              input.attr('aria-describedby',`${name}-hint`)
+            }
+
             if (parent) {
               $('.search-form #' + parent + '-input').append(fieldset.append(label, input))
             }
