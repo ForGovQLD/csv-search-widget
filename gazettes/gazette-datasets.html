@@ -103,17 +103,18 @@ layout: layout.njk
         },
         markup: function (result) {
           let editions_list = result.editions.map(edition => {
-            let prelink = edition.date ? edition.date : edition.name
+            let prelink = edition.date ? edition.date : edition.name,
+                fileSummary = ` (${edition.format.slice(1).toUpperCase()}, ${searchTool.helpers.readableFileSize(edition.size)})`
             if (result.type === "Index") {
               if (edition.companionGuide) {
-                return `<li><a href="${edition.url}">${edition.name}</a></li>`
+                return `<li><a href="${edition.url}">${edition.name}${fileSummary}</a></li>`
               }
               else {
                 prelink = edition.name
               }
             }
             return `<li>${prelink} <a href="${edition.url}">
-            ${edition.volume ? `Volume ${edition.volume}` : ""} ${edition.number ? `Gazette No. ${edition.number}` : ""} ${edition.page ? `Pages ${edition.page}` : ""}</a></li>`
+            ${edition.volume ? `Volume ${edition.volume}` : ""} ${edition.number ? `Gazette No. ${edition.number}` : ""} ${edition.page ? `Pages ${edition.page}` : ""}${fileSummary}</a></li>`
           }
           )
           editions_list = editions_list.join('')
