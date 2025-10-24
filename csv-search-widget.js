@@ -152,16 +152,16 @@
                     if (searchTool.flatFilterFields[key].multi) {
                       $.each(values, (i, value) => {
                         console.log(i, value)
-                        $(`#${key}-filter option[value=${value}]`, searchTool.container).prop('selected', true)
+                        $(`#${key}-filter option[value="${value}"]`, searchTool.container).prop('selected', true)
                       })
-                      $(`#${key}-filter option[value=${values}]`, searchTool.container).prop('selected', true)
+                      $(`#${key}-filter option[value="${values}"]`, searchTool.container).prop('selected', true)
                     }
                     else {
-                      $(`#${key}-filter option[value=${values[0]}]`, searchTool.container).prop('selected', true)
+                      $(`#${key}-filter option[value="${values[0]}"]`, searchTool.container).prop('selected', true)
                     }
                   }
                   else {
-                    $(`#${key}-filter option[value=${values}]`, searchTool.container).prop('selected', true)
+                    $(`#${key}-filter option[value="${values}"]`, searchTool.container).prop('selected', true)
                   }
                 })
 
